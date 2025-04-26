@@ -1,0 +1,13 @@
+{
+  "title": "agoraでビルドできない",
+  "closed": false,
+  "archived": false,
+  "created_at": "2024-06-21",
+  "comments": [
+    {
+      "author": "entaku",
+      "created_at": "2024-06-21",
+      "body_markdown": "### 要約\n\n#### 問題の概要\nユーザーは、ARMベースのMac（Apple Silicon）でAgoraライブラリを使用してテストを実行すると、ランタイム例外が発生する問題に直面しています。この問題はIntelベースのシミュレータやRosetta（Intelスライス）経由のARMでは発生しません。具体的には、AgoraAIDenoiseExtensionがarm64シミュレータで利用できないことが問題です。\n\n#### 詳細\n- **環境**: Agoraバージョン3.6.0、Swift Package Manager（SPM）、ARMベースのMac（Apple Silicon）。\n- **症状**: ARMベースのシミュレータでテストがランタイム例外を引き起こします：\n  ```\n  The bundle \"communications-iosTests\" couldn't be loaded. Try reinstalling the bundle.\n  ```\n- **観察**: 同じテストがIntelベースのシミュレータやRosetta経由のARMでは正常に実行されます。\n\n#### 調査結果\n- **署名されていないFramework**: Agoraフレームワークが適切に署名されていないため、パッケージレベルでシミュレータ上での実行が妨げられている可能性があります。これがプレビューとテストの両方が失敗する理由と考えられます。\n- **Bitrise CI**: Bitrise CIでテストが通る理由については、具体的なBitriseの設定が異なる可能性があります。例えば、Intelシミュレータを使用しているか、異なる構成を使用している可能性があります。\n\n### デベロッパーフォーラム向け要約\nAgora SDKがARMベースのシミュレータで動作しない問題は、フレームワークが適切に署名されていないことに関連しているようです。これにより、パッケージレベルでの実行が妨げられ、プレビューとテストの両方に影響を及ぼしています。Bitrise CIでのテストが成功する理由は、特定の設定や環境の違いによるものと考えられます。"
+    }
+  ]
+}
