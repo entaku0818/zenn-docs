@@ -215,89 +215,6 @@ Fastfileで定義した`upload_metadata`レーンを使用して、メタデー�
 fastlane upload_metadata
 ```
 
-このコマンドを実行すると、以下の処理が自動的に実行されます：
-
-1. Xcodeプロジェクトからバージョン番号を取得
-2. メタデータとスクリーンショットのアップロード
-3. バイナリのアップロード
-4. 審査提出
-
-### 注意点
-
-- バージョン番号はXcodeプロジェクトから自動的に取得されます
-- スクリーンショットは既存のものを上書きします
-- 審査提出時には、IDFAの使用なし、暗号化なしの設定が自動的に適用されます
-- 審査通過後の自動リリースは無効になっています
-
-## 便利なオプション
-
-- `--force`: 確認なしでアップロードを実行
-- `--skip_screenshots`: スクリーンショットのアップロードをスキップ
-- `--skip_metadata`: メタデータのアップロードをスキップ
-- `--precheck_include_in_app_purchases`: アプリ内課金のチェックを含める
-
-## 注意点
-
-1. App Store Connect APIの利用には、適切な権限が必要です
-2. スクリーンショットは、App Store Connectで要求されるサイズと形式に合わせる必要があります
-3. メタデータは、各言語ごとに適切に設定する必要があります
-4. バイナリのアップロードには、有効な証明書とプロビジョニングプロファイルが必要です
-
-## トラブルシューティング
-
-### よくあるエラーと解決方法
-
-#### 1. 必須属性の欠落エラー
-
-以下のようなエラーが発生した場合：
-
-```
-The provided entity is missing a required attribute - You must provide a value for the attribute 'contactFirstName' with this request
-The provided entity is missing a required attribute - You must provide a value for the attribute 'contactLastName' with this request
-The provided entity is missing a required attribute - You must provide a value for the attribute 'contactEmail' with this request
-The provided entity is missing a required attribute - You must provide a value for the attribute 'contactPhone' with this request
-```
-https://github.com/fastlane/fastlane/issues/16716
-
-これは、アプリの審査情報（App Review Information）が正しく設定されていないことを示しています。`Deliverfile`で以下のように設定を確認してください：
-
-```ruby
-app_review_information(
-  first_name: "John",  # 必須
-  last_name: "Doe",    # 必須
-  phone_number: "+1234567890",  # 必須（+から始まる国際形式）
-  email_address: "review@example.com",  # 必須
-  demo_user: "demo",
-  demo_password: "password",
-  notes: "テスト用アカウントでログインできます"
-)
-```
-
-#### 2. 電話番号の形式エラー
-
-```
-An attribute value is invalid. - The phone number must be in a valid format. Preface the phone number with '+' followed by the country code
-```
-
-このエラーは、電話番号が国際形式でないことを示しています。以下の点を確認してください：
-
-- 電話番号は必ず`+`から始める
-- 国番号を含める（例：日本は`+81`）
-- スペースやハイフンは使用しない
-
-正しい形式の例：
-```ruby
-phone_number: "+819012345678"  # 日本の場合
-phone_number: "+14155552671"   # アメリカの場合
-```
-
-### エラー解決の手順
-
-1. `Deliverfile`の設定を確認
-2. 必須項目が全て含まれているか確認
-3. 電話番号の形式が正しいか確認
-4. 設定を修正後、再度`fastlane deliver`を実行
-
 ## Xcode Cloudとの連携
 
 Xcode Cloudを使用することで、CI/CDパイプラインを構築し、App Storeへのデプロイをさらに自動化することができます。以下に、Xcode Cloudとfastlaneの`deliver`を連携させる方法を説明します。
@@ -355,12 +272,39 @@ Xcode Cloudで使用する証明書とプロビジョニングプロファイル
 - 手動実行：Xcode Cloudのダッシュボードから実行
 - 自動実行：指定したブランチへのプッシュ時に自動実行
 
-### 注意点
+## トラブルシューティング
 
-1. Xcode Cloudの実行環境はクリーンな状態から始まるため、必要な依存関係は全てスクリプトでインストールする必要があります
-2. セキュリティ上の理由から、機密情報（パスワードなど）は環境変数として設定することを推奨します
-3. ワークフローの実行時間には制限があるため、スクリプトは効率的に実行する必要があります
-4. デバッグ時は、Xcode Cloudのログを確認して問題を特定できます
+### 遭遇したトラブル
+
+#### 1. メタデータのダウンロードエラー
+
+App Store Connectに正しい情報が登録されていても、以下のようなエラーが発生する場合があります：
+
+```
+The provided entity is missing a required attribute - You must provide a value for the attribute 'contactFirstName' with this request
+The provided entity is missing a required attribute - You must provide a value for the attribute 'contactLastName' with this request
+The provided entity is missing a required attribute - You must provide a value for the attribute 'contactEmail' with this request
+The provided entity is missing a required attribute - You must provide a value for the attribute 'contactPhone' with this request
+```
+
+この場合、`fastlane/metadata/`ディレクトリ内の`app_review_information.txt`ファイルを手動で更新する必要があります：
+
+```txt
+first_name: John
+last_name: Doe
+phone_number: +819012345678
+email_address: review@example.com
+demo_user: demo
+demo_password: password
+notes: テスト用アカウントでログインできます
+```
+
+### エラー解決の手順
+
+1. `fastlane/metadata/`ディレクトリ内の`app_review_information.txt`ファイルを確認
+2. 必須項目（first_name, last_name, phone_number, email_address）が全て含まれているか確認
+3. 電話番号が国際形式（+から始まる）になっているか確認
+4. ファイルを更新後、再度`fastlane deliver`を実行
 
 ## まとめ
 
