@@ -82,53 +82,6 @@ fastlane/
           └── ...
 ```
 
-### 注意点
-
-1. ダウンロードには、App Store Connect APIへのアクセス権限が必要です
-2. 大量のスクリーンショットがある場合、ダウンロードに時間がかかる可能性があります
-3. ダウンロードしたメタデータは、必要に応じて編集してから再度アップロードできます
-4. スクリーンショットは、App Store Connectで要求されるサイズと形式に合わせる必要があります
-
-## fastlaneのインストール
-
-fastlaneをインストールするには、以下のいずれかの方法を使用できます：
-
-### Homebrewを使用する場合（推奨）
-
-```bash
-brew install fastlane
-```
-
-### RubyGemsを使用する場合
-
-```bash
-gem install fastlane
-```
-
-### Bundlerを使用する場合（プロジェクトごとに管理したい場合）
-
-1. プロジェクトのルートディレクトリに`Gemfile`を作成：
-
-```ruby
-source "https://rubygems.org"
-
-gem "fastlane"
-```
-
-2. 以下のコマンドを実行：
-
-```bash
-bundle install
-```
-
-### インストールの確認
-
-インストールが完了したら、以下のコマンドで正しくインストールされたか確認できます：
-
-```bash
-fastlane --version
-```
-
 ## deliverアクションとは
 
 [`deliver`](https://docs.fastlane.tools/actions/deliver/)アクションは、App Store Connectへのアップロードを自動化するためのfastlaneのアクションです。以下の機能を提供します：
@@ -160,37 +113,88 @@ fastlane deliver init
 - `fastlane/metadata/`: メタデータを格納するディレクトリ
 - `fastlane/screenshots/`: スクリーンショットを格納するディレクトリ
 
-### 3. Deliverfileの設定
+### 3. Fastfileの設定
 
-`fastlane/Deliverfile`に以下のような設定を追加します：
+`fastlane/Fastfile`に以下のような設定を追加します：
 
 ```ruby
-app_identifier("com.your.app")
-username("your@email.com")
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
 
-# スクリーンショットのパス
-screenshots_path("./fastlane/screenshots")
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
 
-# メタデータのパス
-metadata_path("./fastlane/metadata")
+default_platform(:ios)
 
-# アプリの審査情報
-app_review_information(
-  first_name: "John",
-  last_name: "Doe",
-  phone_number: "+1234567890",
-  email_address: "review@example.com",
-  demo_user: "demo",
-  demo_password: "password",
-  notes: "テスト用アカウントでログインできます"
-)
+platform :ios do
+  # 各レーンで共通して実行する認証処理
+  before_all do
+    # APIキー認証を使用する場合
+    app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
+      key_content: ENV["APP_STORE_CONNECT_API_KEY_CONTENT"]  # ファイルパスの代わりにキーの内容を直接指定
+    )
+  end
 
-# 自動リリース設定
-automatic_release(true)
-
-# 段階的リリース
-phased_release(true)
+  # メタデータとスクリーンショットのアップロード、審査提出
+  desc "Upload metadata and screenshots to App Store Connect and submit for review"
+  lane :upload_metadata do
+    # Xcodeプロジェクトからバージョン番号を取得
+    version_number = get_version_number(
+      xcodeproj: "VoiLog.xcodeproj",
+      target: "VoiLog"
+    )
+    
+    # バージョン番号が取得できなかった場合はエラー
+    UI.user_error!("バージョン番号をXcodeプロジェクトから取得できませんでした。") unless version_number && !version_number.empty?
+    
+    UI.success("Xcodeプロジェクトからバージョン番号を取得しました: #{version_number}")
+    
+    deliver(
+      skip_binary_upload: false,     # バイナリのアップロードを実行
+      skip_app_version_update: false, # アプリバージョンの更新をスキップしない
+      app_version: version_number,    # アプリのバージョン番号を指定
+      skip_metadata: false,          # メタデータの更新をスキップしない
+      skip_screenshots: false,       # スクリーンショットのアップロードをスキップしない
+      force: true,                   # 確認なしで強制的に実行
+      overwrite_screenshots: true,   # 既存のスクリーンショットを上書き
+      ignore_language_directory_validation: true, # 言語ディレクトリの検証を無視
+      run_precheck_before_submit: true,  # 提出前の事前チェックを実行
+      precheck_include_in_app_purchases: false,  # In-app purchasesのチェックをスキップ
+      submit_for_review: true,       # 審査提出を実行
+      automatic_release: false,      # 審査通過後の自動リリースは無効
+      submission_information: {
+        add_id_info_uses_idfa: false,  # IDFAの使用なし
+        export_compliance_uses_encryption: false,  # 暗号化なし
+        export_compliance_platform: "ios"  # プラットフォームはiOS
+      }
+    )
+  end
+end
 ```
+
+このFastfileでは以下の設定を行っています：
+
+1. App Store Connect API認証の設定
+   - APIキーを使用した認証を設定
+   - 環境変数から認証情報を取得
+
+2. `upload_metadata`レーンの設定
+   - Xcodeプロジェクトからバージョン番号を自動取得
+   - メタデータとスクリーンショットのアップロード
+   - バイナリのアップロード
+   - 審査提出の設定
+   - 提出情報（IDFA、暗号化など）の設定
 
 ### 4. メタデータの管理
 
