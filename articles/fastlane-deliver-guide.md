@@ -287,23 +287,27 @@ The provided entity is missing a required attribute - You must provide a value f
 The provided entity is missing a required attribute - You must provide a value for the attribute 'contactPhone' with this request
 ```
 
-この場合、`fastlane/metadata/`ディレクトリ内の`app_review_information.txt`ファイルを手動で更新する必要があります：
+この場合、`fastlane/metadata/review_information/`ディレクトリ内のファイルを手動で更新する必要があります：
 
 ```txt
-first_name: John
-last_name: Doe
-phone_number: +819012345678
-email_address: review@example.com
-demo_user: demo
-demo_password: password
-notes: テスト用アカウントでログインできます
+# fastlane/metadata/review_information/first_name.txt
+John
+
+# fastlane/metadata/review_information/last_name.txt
+Doe
+
+# fastlane/metadata/review_information/phone_number.txt
++819012345678
+
+# fastlane/metadata/review_information/email_address.txt
+review@example.com
 ```
 
 ### エラー解決の手順
 
-1. `fastlane/metadata/`ディレクトリ内の`app_review_information.txt`ファイルを確認
-2. 必須項目（first_name, last_name, phone_number, email_address）が全て含まれているか確認
-3. 電話番号が国際形式（+から始まる）になっているか確認
+1. `fastlane/metadata/review_information/`ディレクトリ内のファイルを確認
+2. 必須項目（first_name.txt, last_name.txt, phone_number.txt, email_address.txt）が全て存在するか確認
+3. 各ファイルに正しい値が設定されているか確認
 4. ファイルを更新後、再度`fastlane deliver`を実行
 
 ## まとめ
