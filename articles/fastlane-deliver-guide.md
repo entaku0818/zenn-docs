@@ -196,40 +196,6 @@ end
    - 審査提出の設定
    - 提出情報（IDFA、暗号化など）の設定
 
-### 4. メタデータの管理
-
-`fastlane/metadata/`ディレクトリに以下のような構造でメタデータを配置します：
-
-```
-metadata/
-  ├── en-US/
-  │   ├── description.txt
-  │   ├── keywords.txt
-  │   ├── name.txt
-  │   └── release_notes.txt
-  └── ja/
-      ├── description.txt
-      ├── keywords.txt
-      ├── name.txt
-      └── release_notes.txt
-```
-
-### 5. スクリーンショットの管理
-
-`fastlane/screenshots/`ディレクトリに以下のような構造でスクリーンショットを配置します：
-
-```
-screenshots/
-  ├── en-US/
-  │   ├── iPhone 14 Pro-1.png
-  │   ├── iPhone 14 Pro-2.png
-  │   └── ...
-  └── ja/
-      ├── iPhone 14 Pro-1.png
-      ├── iPhone 14 Pro-2.png
-      └── ...
-```
-
 ## 使用方法
 
 ### メタデータとスクリーンショットのアップロード
