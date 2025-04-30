@@ -1,9 +1,9 @@
 ---
-title: "fastlaneのdeliverアクションでApp Storeへのデプロイを自動化する"
+title: "fastlaneのfastlane deliver downloadで既存のApp Storeへのデプロイを自動化する"
 emoji: "🚀"
 type: "tech"
 topics: ["ios", "fastlane", "appstore", "ci"]
-published: false
+published: true
 ---
 
 
@@ -133,7 +133,7 @@ end
 
 ## 既存のメタデータとスクリーンショットのダウンロード
 
-既存のApp Store Connectの設定をfastlaneに移行するのは、実はとても簡単です。手動で設定をコピーする必要はなく、`deliver`アクションが自動的に既存の設定をダウンロードしてくれます。以下の手順で、現在のApp Store Connectの設定を簡単にfastlaneの環境に移行できます：
+手動で設定をコピーする必要はなく、`deliver`アクションが自動的に既存の設定をダウンロードしてくれます。以下の手順で、現在のApp Store Connectの設定を簡単にfastlaneの環境に移行できます：
 
 ### 1. deliverの初期化
 
