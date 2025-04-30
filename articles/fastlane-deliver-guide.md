@@ -12,6 +12,46 @@ published: false
 
 iOSアプリのApp Storeへのデプロイは、スクリーンショットのアップロード、メタデータの更新、バイナリのアップロードなど、多くの手動作業が必要です。これらの作業を自動化するために、fastlaneの`deliver`アクションを使用することができます。
 
+## fastlaneのインストール
+
+fastlaneをインストールするには、以下のいずれかの方法を使用できます：
+
+### Homebrewを使用する場合（推奨）
+
+```bash
+brew install fastlane
+```
+
+### RubyGemsを使用する場合
+
+```bash
+gem install fastlane
+```
+
+### Bundlerを使用する場合（プロジェクトごとに管理したい場合）
+
+1. プロジェクトのルートディレクトリに`Gemfile`を作成：
+
+```ruby
+source "https://rubygems.org"
+
+gem "fastlane"
+```
+
+2. 以下のコマンドを実行：
+
+```bash
+bundle install
+```
+
+### インストールの確認
+
+インストールが完了したら、以下のコマンドで正しくインストールされたか確認できます：
+
+```bash
+fastlane --version
+```
+
 ## deliverアクションとは
 
 [`deliver`](https://docs.fastlane.tools/actions/deliver/)アクションは、App Store Connectへのアップロードを自動化するためのfastlaneのアクションです。以下の機能を提供します：
