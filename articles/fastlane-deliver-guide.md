@@ -198,6 +198,70 @@ phone_number: "+14155552671"   # アメリカの場合
 3. 電話番号の形式が正しいか確認
 4. 設定を修正後、再度`fastlane deliver`を実行
 
+## Xcode Cloudとの連携
+
+Xcode Cloudを使用することで、CI/CDパイプラインを構築し、App Storeへのデプロイをさらに自動化することができます。以下に、Xcode Cloudとfastlaneの`deliver`を連携させる方法を説明します。
+
+### 1. Xcode Cloudの設定
+
+1. Xcodeでプロジェクトを開き、Product > Xcode Cloud > Create Workflowを選択
+2. ワークフローの設定で以下を選択：
+   - トリガー：手動実行または特定のブランチへのプッシュ
+   - アクション：Build and Test
+   - 環境：macOS
+
+### 2. Post-Actionsスクリプトの追加
+
+Xcode Cloudのワークフロー設定で、Post-Actionsスクリプトを追加します。以下のようなスクリプトを作成します：
+
+```bash
+#!/bin/bash
+
+# fastlaneのインストール
+brew install fastlane
+
+# プロジェクトディレクトリに移動
+cd $CI_WORKSPACE
+
+# deliverの実行
+fastlane deliver \
+  --ipa "$CI_PRODUCT_PATH" \
+  --skip_screenshots \
+  --skip_metadata \
+  --force \
+  --precheck_include_in_app_purchases
+```
+
+### 3. 環境変数の設定
+
+Xcode Cloudのワークフロー設定で、以下の環境変数を設定します：
+
+- `FASTLANE_USER`: App Store Connectのユーザー名
+- `FASTLANE_PASSWORD`: App Store Connectのパスワード
+- `FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD`: アプリケーション固有のパスワード（2要素認証を使用している場合）
+
+### 4. 証明書とプロビジョニングプロファイルの設定
+
+Xcode Cloudで使用する証明書とプロビジョニングプロファイルを設定します：
+
+1. Xcode Cloudのワークフロー設定で「Signing & Capabilities」を選択
+2. 適切な証明書とプロビジョニングプロファイルを選択
+3. 必要に応じて「Automatically manage signing」を有効化
+
+### 5. ワークフローの実行
+
+設定が完了したら、以下の方法でワークフローを実行できます：
+
+- 手動実行：Xcode Cloudのダッシュボードから実行
+- 自動実行：指定したブランチへのプッシュ時に自動実行
+
+### 注意点
+
+1. Xcode Cloudの実行環境はクリーンな状態から始まるため、必要な依存関係は全てスクリプトでインストールする必要があります
+2. セキュリティ上の理由から、機密情報（パスワードなど）は環境変数として設定することを推奨します
+3. ワークフローの実行時間には制限があるため、スクリプトは効率的に実行する必要があります
+4. デバッグ時は、Xcode Cloudのログを確認して問題を特定できます
+
 ## まとめ
 
 fastlaneの`deliver`アクションを使用することで、App Storeへのデプロイプロセスを大幅に自動化できます。これにより、開発者はより重要な開発作業に集中することができ、デプロイのミスを減らすことができます。
