@@ -12,86 +12,6 @@ published: false
 
 iOSアプリのApp Storeへのデプロイは、スクリーンショットのアップロード、メタデータの更新、バイナリのアップロードなど、多くの手動作業が必要です。これらの作業を自動化するために、fastlaneの`deliver`アクションを使用することができます。
 
-## 既存のメタデータとスクリーンショットのダウンロード
-
-App Store Connectに既にアップロードされているメタデータとスクリーンショットをダウンロードするには、以下の手順を実行します：
-
-### 1. deliverの初期化
-
-```bash
-fastlane deliver init
-```
-
-このコマンドを実行すると、以下のファイルとディレクトリが作成されます：
-- `fastlane/Deliverfile`: deliverの設定ファイル
-- `fastlane/metadata/`: メタデータを格納するディレクトリ
-- `fastlane/screenshots/`: スクリーンショットを格納するディレクトリ
-
-### 2. メタデータとスクリーンショットのダウンロード
-
-```bash
-fastlane deliver download_metadata
-fastlane deliver download_screenshots
-```
-
-これらのコマンドを実行すると、App Store Connectから以下の情報がダウンロードされます：
-
-- メタデータ
-  - アプリ名
-  - 説明文
-  - キーワード
-  - プライバシーポリシーURL
-  - サポートURL
-  - マーケティングURL
-  - プライス情報
-  - カテゴリ
-  - 年齢制限
-  - 著作権情報
-  - リリースノート
-
-- スクリーンショット
-  - 各デバイスサイズのスクリーンショット
-  - 各言語のスクリーンショット
-  - App Preview動画（存在する場合）
-
-### 3. ダウンロードしたファイルの確認
-
-ダウンロードしたファイルは以下のディレクトリに保存されます：
-
-```
-fastlane/
-  ├── metadata/
-  │   ├── en-US/
-  │   │   ├── description.txt
-  │   │   ├── keywords.txt
-  │   │   ├── name.txt
-  │   │   └── release_notes.txt
-  │   └── ja/
-  │       ├── description.txt
-  │       ├── keywords.txt
-  │       ├── name.txt
-  │       └── release_notes.txt
-  └── screenshots/
-      ├── en-US/
-      │   ├── iPhone 14 Pro-1.png
-      │   ├── iPhone 14 Pro-2.png
-      │   └── ...
-      └── ja/
-          ├── iPhone 14 Pro-1.png
-          ├── iPhone 14 Pro-2.png
-          └── ...
-```
-
-## deliverアクションとは
-
-[`deliver`](https://docs.fastlane.tools/actions/deliver/)アクションは、App Store Connectへのアップロードを自動化するためのfastlaneのアクションです。以下の機能を提供します：
-
-- スクリーンショットのアップロード
-- メタデータの更新
-- バイナリ（.ipa）のアップロード
-- アプリの審査提出
-- リリースノートの更新
-
 ## セットアップ手順
 
 ### 1. fastlaneの初期化
@@ -109,7 +29,6 @@ fastlane deliver init
 ```
 
 このコマンドを実行すると、以下のファイルが作成されます：
-- `fastlane/Deliverfile`: deliverの設定ファイル
 - `fastlane/metadata/`: メタデータを格納するディレクトリ
 - `fastlane/screenshots/`: スクリーンショットを格納するディレクトリ
 
@@ -195,6 +114,85 @@ end
    - バイナリのアップロード
    - 審査提出の設定
    - 提出情報（IDFA、暗号化など）の設定
+
+## 既存のメタデータとスクリーンショットのダウンロード
+
+App Store Connectに既にアップロードされているメタデータとスクリーンショットをダウンロードするには、以下の手順を実行します：
+
+### 1. deliverの初期化
+
+```bash
+fastlane deliver init
+```
+
+このコマンドを実行すると、以下のファイルとディレクトリが作成されます：
+- `fastlane/metadata/`: メタデータを格納するディレクトリ
+- `fastlane/screenshots/`: スクリーンショットを格納するディレクトリ
+
+### 2. メタデータとスクリーンショットのダウンロード
+
+```bash
+fastlane deliver download_metadata
+fastlane deliver download_screenshots
+```
+
+これらのコマンドを実行すると、App Store Connectから以下の情報がダウンロードされます：
+
+- メタデータ
+  - アプリ名
+  - 説明文
+  - キーワード
+  - プライバシーポリシーURL
+  - サポートURL
+  - マーケティングURL
+  - プライス情報
+  - カテゴリ
+  - 年齢制限
+  - 著作権情報
+  - リリースノート
+
+- スクリーンショット
+  - 各デバイスサイズのスクリーンショット
+  - 各言語のスクリーンショット
+  - App Preview動画（存在する場合）
+
+### 3. ダウンロードしたファイルの確認
+
+ダウンロードしたファイルは以下のディレクトリに保存されます：
+
+```
+fastlane/
+  ├── metadata/
+  │   ├── en-US/
+  │   │   ├── description.txt
+  │   │   ├── keywords.txt
+  │   │   ├── name.txt
+  │   │   └── release_notes.txt
+  │   └── ja/
+  │       ├── description.txt
+  │       ├── keywords.txt
+  │       ├── name.txt
+  │       └── release_notes.txt
+  └── screenshots/
+      ├── en-US/
+      │   ├── iPhone 14 Pro-1.png
+      │   ├── iPhone 14 Pro-2.png
+      │   └── ...
+      └── ja/
+          ├── iPhone 14 Pro-1.png
+          ├── iPhone 14 Pro-2.png
+          └── ...
+```
+
+## deliverアクションとは
+
+[`deliver`](https://docs.fastlane.tools/actions/deliver/)アクションは、App Store Connectへのアップロードを自動化するためのfastlaneのアクションです。以下の機能を提供します：
+
+- スクリーンショットのアップロード
+- メタデータの更新
+- バイナリ（.ipa）のアップロード
+- アプリの審査提出
+- リリースノートの更新
 
 ## 使用方法
 
