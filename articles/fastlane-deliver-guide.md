@@ -61,7 +61,7 @@ platform :ios do
     app_store_connect_api_key(
       key_id: ENV["APP_STORE_CONNECT_API_KEY_KEY_ID"],
       issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
-      key_content: ENV["APP_STORE_CONNECT_API_KEY_CONTENT"]  # ファイルパスの代わりにキーの内容を直接指定
+      key_content: ENV["APP_STORE_CONNECT_API_KEY_CONTENT"]  
     )
   end
 
@@ -117,7 +117,7 @@ end
 
 ## 既存のメタデータとスクリーンショットのダウンロード
 
-App Store Connectに既にアップロードされているメタデータとスクリーンショットをダウンロードするには、以下の手順を実行します：
+既存のApp Store Connectの設定をfastlaneに移行するのは、実はとても簡単です。手動で設定をコピーする必要はなく、`deliver`アクションが自動的に既存の設定をダウンロードしてくれます。以下の手順で、現在のApp Store Connectの設定を簡単にfastlaneの環境に移行できます：
 
 ### 1. deliverの初期化
 
