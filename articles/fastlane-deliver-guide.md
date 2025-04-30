@@ -14,7 +14,7 @@ iOSアプリのApp Storeへのデプロイは、スクリーンショットの�
 
 ## deliverアクションとは
 
-`deliver`アクションは、App Store Connectへのアップロードを自動化するためのfastlaneのアクションです。以下の機能を提供します：
+[`deliver`](https://docs.fastlane.tools/actions/deliver/)アクションは、App Store Connectへのアップロードを自動化するためのfastlaneのアクションです。以下の機能を提供します：
 
 - スクリーンショットのアップロード
 - メタデータの更新
