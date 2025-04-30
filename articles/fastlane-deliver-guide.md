@@ -107,6 +107,19 @@ end
 1. App Store Connect API認証の設定
    - APIキーを使用した認証を設定
    - 環境変数から認証情報を取得
+   - 必要な環境変数：
+     - `APP_STORE_CONNECT_API_KEY_KEY_ID`: APIキーのID
+     - `APP_STORE_CONNECT_API_KEY_ISSUER_ID`: 発行者ID
+     - `APP_STORE_CONNECT_API_KEY_CONTENT`: APIキーの内容（.p8ファイルの内容）
+
+   APIキーの取得方法：
+   1. App Store Connectにログイン
+   2. 「ユーザーとアクセス」→「キー」を選択
+   3. 「+」ボタンをクリックして新しいキーを生成
+   4. キー名を入力し、必要な権限を選択
+   5. 生成されたキーをダウンロード（.p8ファイル）
+   6. キーIDと発行者IDをメモ
+   7. .p8ファイルの内容を環境変数に設定
 
 2. `upload_metadata`レーンの設定
    - Xcodeプロジェクトからバージョン番号を自動取得
