@@ -3,7 +3,7 @@ title: "Swiftプロトコル実装の効果をテストで検証する実践ガ�
 emoji: "🧪"
 type: "tech"
 topics: ["Swift", "iOS", "Protocol", "Testing", "XCTest"]
-published: false
+published: true
 ---
 
 # この記事は？
