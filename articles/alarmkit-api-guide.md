@@ -148,7 +148,7 @@ AlarmKitを使用するには、`Info.plist`に以下のキーを追加する必
 <plist version="1.0">
 <dict>
     <key>NSAlarmKitUsageDescription</key>
-    <string>搭乗時刻時間前にアラームを設定するために使用します</string>
+    <string>アラームを設定するために使用します</string>
     <key>NSSupportsLiveActivities</key>
     <true/>
 </dict>
